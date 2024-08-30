@@ -10,4 +10,4 @@ ALPACA_URL = https://paper-api.alpaca.markets
 
 # Stock symbols to trade
 SYMBOLS = [
-    "AAPL", "MSFT", "NVDA", "GOOG", "AMZN", "META", "LLY", "AVGO", "TSLA", "LMT", "EA", "CRM", "OXY"]  
+    "AAPL", "MSFT", "NVDA", "GOOG", "AMZN", "META", "LLY", "CAVA", "BRK.B", "JPM", "TSLA", "ABBV", "V", "WMT", "NFLX", "AMD", "GE", "RKLB", "DIS", "SYK", "NKE", "GM", "XOM", "JNJ", "COST", "MRK", "CRM", "ORCL", "QCOM", "PFE", "GS", "AMAT", "AXP", "T", "BA", "MO"]  
