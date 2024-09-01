@@ -92,20 +92,19 @@ class NewsAdvisorBot:
     def process_news(self, symbol):
         print(f"Processing news for {symbol}...")
         articles_json = self.get_news(symbol)
-        if articles_json:
+        if articles_json and 'news' in articles_json:
             articles = articles_json.get('news', [])
-            df = pd.DataFrame(articles)
-            if df.empty:
+            if not articles:
                 print(f"No articles found for {symbol}.")
-                return df
-
+                return pd.DataFrame(columns=self.columns)
+            
+            df = pd.DataFrame(articles)
             columns_to_keep = ["created_at", "headline", "id", "summary", "symbols"]
             columns_present = [col for col in columns_to_keep if col in df.columns]
             df = df[columns_present]
 
             # Convert 'created_at' to datetime with UTC timezone
             df['created_at'] = pd.to_datetime(df['created_at']).dt.tz_convert(UTC)
-
             df['summary'] = df['summary'].apply(self.clean_text)
 
             # Ensure 'symbols' is always a list
@@ -113,7 +112,9 @@ class NewsAdvisorBot:
 
             print(f"Processed {len(df)} articles for {symbol}.")
             return df
-        return pd.DataFrame(columns=self.columns)
+        else:
+            print(f"Error: No news data returned for {symbol}.")
+            return pd.DataFrame(columns=self.columns)
 
     def apply_sentiment_analysis(self, df):
         print("Applying sentiment analysis to headlines and summaries...")
@@ -224,7 +225,6 @@ class NewsAdvisorBot:
 
         print("Processing trades based on sentiment...")
 
-        # Dictionary to track if an order has already been placed for a symbol
         trade_placed = {}
 
         for _, row in sentiment_summary_df.iterrows():
@@ -232,21 +232,19 @@ class NewsAdvisorBot:
             headline_sentiment = row['headline_sentiment']
             summary_sentiment = row['summary_sentiment']
 
-            # Check if a trade has already been placed for this symbol
             if symbol in trade_placed:
                 print(f"Trade already placed for {symbol}, skipping further trades.")
                 continue
 
-            # Example trading logic based on sentiment
             if headline_sentiment == 'positive' and summary_sentiment == 'positive':
                 print(f"Placing a buy order for {symbol} worth $1.")
-                self.place_order(symbol, 1)  # Buy $1 worth of stock
-                trade_placed[symbol] = True  # Mark the symbol as traded
+                self.place_order(symbol, 1)
+                trade_placed[symbol] = True
 
             elif headline_sentiment == 'negative' and summary_sentiment == 'negative':
                 print(f"Placing a sell order for {symbol} worth $1.")
-                self.place_order(symbol, -1)  # Sell $1 worth of stock
-                trade_placed[symbol] = True  # Mark the symbol as traded
+                self.place_order(symbol, -1)
+                trade_placed[symbol] = True
 
 
 if __name__ == "__main__":
