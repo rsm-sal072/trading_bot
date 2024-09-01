@@ -190,12 +190,18 @@ class NewsAdvisorBot:
 
     def place_order(self, symbol, amount):
         try:
+            # Ensure the amount is exactly $1 or -$1 before placing an order
+            if abs(amount) != 1:
+                print(f"Warning: Invalid order amount: {amount}. It should be exactly $1 or -$1.")
+                return
+
             print(f"Placing an order for {symbol}: ${amount}")
-            # Submit a notional order
+            
+            # Check for buy or sell and ensure it's a notional trade of $1
             if amount > 0:
                 self.alpaca.submit_order(
                     symbol=symbol,
-                    notional=amount,  # This allows you to place an order for a specific dollar amount
+                    notional=1,  # Buy exactly $1 worth of stock
                     side='buy',
                     type='market',
                     time_in_force='gtc'
@@ -203,7 +209,7 @@ class NewsAdvisorBot:
             elif amount < 0:
                 self.alpaca.submit_order(
                     symbol=symbol,
-                    notional=abs(amount),  # Use absolute value for notional amount
+                    notional=1,  # Sell exactly $1 worth of stock
                     side='sell',
                     type='market',
                     time_in_force='gtc'
@@ -218,19 +224,29 @@ class NewsAdvisorBot:
 
         print("Processing trades based on sentiment...")
 
+        # Dictionary to track if an order has already been placed for a symbol
+        trade_placed = {}
+
         for _, row in sentiment_summary_df.iterrows():
             symbol = row['symbol']
             headline_sentiment = row['headline_sentiment']
             summary_sentiment = row['summary_sentiment']
 
+            # Check if a trade has already been placed for this symbol
+            if symbol in trade_placed:
+                print(f"Trade already placed for {symbol}, skipping further trades.")
+                continue
+
             # Example trading logic based on sentiment
             if headline_sentiment == 'positive' and summary_sentiment == 'positive':
                 print(f"Placing a buy order for {symbol} worth $1.")
                 self.place_order(symbol, 1)  # Buy $1 worth of stock
+                trade_placed[symbol] = True  # Mark the symbol as traded
 
             elif headline_sentiment == 'negative' and summary_sentiment == 'negative':
                 print(f"Placing a sell order for {symbol} worth $1.")
                 self.place_order(symbol, -1)  # Sell $1 worth of stock
+                trade_placed[symbol] = True  # Mark the symbol as traded
 
 
 if __name__ == "__main__":
