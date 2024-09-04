@@ -13,8 +13,8 @@ from config import ALPACA_API_KEY, ALPACA_SECRET_KEY, ALPACA_URL, SYMBOLS
 
 warnings.filterwarnings("ignore")
 
-ALPACA_API_KEY = "PKRXMMJQIZCZESV9E0KQ"
-ALPACA_SECRET_KEY = "E5hv1t2VQ9EstidwcqIFFoQ60q2tSWfIdfcDPOco"
+ALPACA_API_KEY = "PKN5131GB4VMX88B1YN7"
+ALPACA_SECRET_KEY = "6fN7wWoehkRV3B4yf1sdkSozQR9NKaRPeUIZVBeS"
 ALPACA_URL = "https://paper-api.alpaca.markets"
 
 class NewsAdvisorBot:
