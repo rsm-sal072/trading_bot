@@ -2,7 +2,7 @@ name: Automated Trading Bot
 
 on:
   schedule:
-    - cron: '0 */8 * * *' # This cron schedule runs the script every hour
+    - cron: '0 */4 * * *' # This cron schedule runs the script every hour
   workflow_dispatch: # Allows manual triggering from the GitHub Actions tab
 
 jobs:
