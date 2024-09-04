@@ -191,18 +191,14 @@ class NewsAdvisorBot:
 
     def place_order(self, symbol, amount):
         try:
-            # Ensure the amount is exactly $1 or -$1 before placing an order
-            if abs(amount) != 1:
-                print(f"Warning: Invalid order amount: {amount}. It should be exactly $1 or -$1.")
-                return
-
+            # Debugging: Print the order amount for visibility
             print(f"Placing an order for {symbol}: ${amount}")
             
-            # Check for buy or sell and ensure it's a notional trade of $1
+            # Check for buy or sell and submit an order for the calculated amount
             if amount > 0:
                 self.alpaca.submit_order(
                     symbol=symbol,
-                    notional=1,  # Buy exactly $1 worth of stock
+                    notional=amount,  # Buy the amount calculated based on sentiment
                     side='buy',
                     type='market',
                     time_in_force='gtc'
@@ -210,7 +206,7 @@ class NewsAdvisorBot:
             elif amount < 0:
                 self.alpaca.submit_order(
                     symbol=symbol,
-                    notional=1,  # Sell exactly $1 worth of stock
+                    notional=abs(amount),  # Sell the amount calculated based on sentiment
                     side='sell',
                     type='market',
                     time_in_force='gtc'
@@ -236,14 +232,15 @@ class NewsAdvisorBot:
                 print(f"Trade already placed for {symbol}, skipping further trades.")
                 continue
 
+            # Place buy or sell order based on sentiment
             if headline_sentiment == 'positive' and summary_sentiment == 'positive':
-                print(f"Placing a buy order for {symbol} worth $1.")
-                self.place_order(symbol, 1)
+                print(f"Placing a buy order for {symbol}.")
+                self.place_order(symbol, 1)  # Modify the amount based on your needs
                 trade_placed[symbol] = True
 
             elif headline_sentiment == 'negative' and summary_sentiment == 'negative':
-                print(f"Placing a sell order for {symbol} worth $1.")
-                self.place_order(symbol, -1)
+                print(f"Placing a sell order for {symbol}.")
+                self.place_order(symbol, -1)  # Modify the amount based on your needs
                 trade_placed[symbol] = True
 
 
