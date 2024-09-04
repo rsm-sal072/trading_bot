@@ -10,8 +10,8 @@ def main():
         load_dotenv()
 
         # Fetch Alpaca API credentials
-        ALPACA_API_KEY = "PKRXMMJQIZCZESV9E0KQ"
-        ALPACA_SECRET_KEY = "E5hv1t2VQ9EstidwcqIFFoQ60q2tSWfIdfcDPOco"
+        ALPACA_API_KEY = "PKN5131GB4VMX88B1YN7"
+        ALPACA_SECRET_KEY = "6fN7wWoehkRV3B4yf1sdkSozQR9NKaRPeUIZVBeS"
         ALPACA_URL = "https://paper-api.alpaca.markets"
 
         # Debugging: Print the variables to confirm they are loaded
