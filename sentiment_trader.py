@@ -43,12 +43,12 @@ class SentimentTrader:
     def buy_positive_positions(self, sentiment_df):
         # Define the dollar amount mapping based on time period
         dollar_amount_time_period_map = {
-            'last_hour': 100,
-            'last_eight_hours': 50,
-            'last_sixteen_hours': 25,
-            'last_24_hours': 10,
-            'last_day': 5,
-            'last_week': 2
+            'last_hour': 10,
+            'last_eight_hours': 5,
+            'last_sixteen_hours': 3,
+            'last_24_hours': 2,
+            'last_day': 1,
+            'last_week': 0.5
         }
 
         # Filter for positive sentiment and map the dollar amounts
