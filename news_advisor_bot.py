@@ -189,19 +189,21 @@ class NewsAdvisorBot:
             print("No news data available.")
             return pd.DataFrame()
 
-    def place_order(self, symbol, amount):
+    def place_order(self, symbol, amount, is_fractional=False):
         try:
             # Debugging: Print the order amount for visibility
             print(f"Placing an order for {symbol}: ${amount}")
-            
-            # Check for buy or sell and submit an order for the calculated amount
+
+            # Ensure time_in_force is 'day' for fractional shares
+            time_in_force = 'day' if is_fractional else 'gtc'
+
             if amount > 0:
                 self.alpaca.submit_order(
                     symbol=symbol,
                     notional=amount,  # Buy the amount calculated based on sentiment
                     side='buy',
                     type='market',
-                    time_in_force='gtc'
+                    time_in_force=time_in_force  # Set time_in-force to 'day' for fractional orders
                 )
             elif amount < 0:
                 self.alpaca.submit_order(
@@ -209,7 +211,7 @@ class NewsAdvisorBot:
                     notional=abs(amount),  # Sell the amount calculated based on sentiment
                     side='sell',
                     type='market',
-                    time_in_force='gtc'
+                    time_in_force=time_in_force  # Set time_in-force to 'day' for fractional orders
                 )
         except Exception as e:
             print(f"Error placing order for {symbol}: {e}")
@@ -235,12 +237,12 @@ class NewsAdvisorBot:
             # Place buy or sell order based on sentiment
             if headline_sentiment == 'positive' and summary_sentiment == 'positive':
                 print(f"Placing a buy order for {symbol}.")
-                self.place_order(symbol, 1)  # Modify the amount based on your needs
+                self.place_order(symbol, 1, is_fractional=True)  # Pass fractional flag
                 trade_placed[symbol] = True
 
             elif headline_sentiment == 'negative' and summary_sentiment == 'negative':
                 print(f"Placing a sell order for {symbol}.")
-                self.place_order(symbol, -1)  # Modify the amount based on your needs
+                self.place_order(symbol, -1, is_fractional=True)  # Pass fractional flag
                 trade_placed[symbol] = True
 
 
