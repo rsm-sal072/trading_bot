@@ -26,17 +26,22 @@ class SentimentTrader:
         # Loop through current positions, sell if in the negative companies array
         for position in current_positions:
             symbol = position.symbol
+            qty = float(position.qty)
+
+            # Check if the position is fractional (non-integer quantity)
+            is_fractional = not qty.is_integer()
+
             if symbol in negative_companies:
-                print(f"Selling all positions in {symbol}")
+                print(f"Selling all positions in {symbol}. Fractional: {is_fractional}")
                 try:
                     self.api.submit_order(
                         symbol=symbol,
-                        qty=position.qty,
+                        qty=str(abs(qty)),  # Use absolute quantity as a string to handle fractional shares
                         side='sell',
                         type='market',
-                        time_in_force='gtc'
+                        time_in_force='day' if is_fractional else 'gtc'  # Ensure 'day' for fractional orders
                     )
-                    print(f"Sold all positions in {symbol}")
+                    print(f"Sold all positions in {symbol}.")
                 except Exception as e:
                     print(f"An error occurred while selling {symbol}: {e}")
 
@@ -73,4 +78,3 @@ class SentimentTrader:
                 print(f"Order submitted successfully for {symbol}: {order}")
             except Exception as e:
                 print(f"An error occurred while submitting the order for {symbol}: {e}")
-
