@@ -9,4 +9,4 @@ ALPACA_SECRET_KEY = os.getenv("APCA_API_SECRET_KEY")
 ALPACA_URL = os.getenv("APCA_API_BASE_URL")
 
 # Stock symbols to trade
-SYMBOLS = ["AAPL", "TSLA", "AMZN", "MSFT", "NVDA", "META", "XOM", "CVX", "XAU/USD", "CO1"] 
+SYMBOLS = ["AAPL", "TSLA", "AMZN", "MSFT", "NVDA", "JPM", "XOM", "CVX", "XAU/USD", "CO1"] 
